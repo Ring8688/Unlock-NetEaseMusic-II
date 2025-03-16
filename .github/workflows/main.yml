@@ -2,8 +2,12 @@ name: Unlock-NetEaseMusic
 
 on:
   schedule:
-    - cron: "37 */8 * * *" # Runs every 8 hours
-  workflow_dispatch:
+    - cron: "37 */8 * * *"  # 每 8 小时的第 37 分钟运行
+  workflow_dispatch:  # 允许手动触发
+  push:
+    branches:
+      - main
+      - Jane
 
 jobs:
   build:
@@ -11,17 +15,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4  # 升级 checkout 版本
 
       - name: Install Chrome & Chromedriver
         run: |
           echo "Installing Google Chrome and Chromedriver..."
           choco install googlechrome -y
-          choco install chromedriver -y --force
+          choco install chromedriver -y --force --ignore-checksums
           echo "✅ Chrome & Chromedriver installed successfully."
 
       - name: Debug Chrome and Chromedriver
-        shell: pwsh # 强制使用 PowerShell
+        shell: pwsh
         run: |
           echo "Checking Chrome version..."
           if (Test-Path "C:\Program Files\Google\Chrome\Application\chrome.exe") {
@@ -29,7 +33,6 @@ jobs:
           } else {
               echo "❌ Chrome not found!"
           }
-
           echo "Checking Chromedriver version..."
           if (Get-Command chromedriver -ErrorAction SilentlyContinue) {
               chromedriver --version
@@ -48,4 +51,4 @@ jobs:
           PASSWORD: ${{ secrets.PASSWORD }}
           PYTHONIOENCODING: utf-8
           PYTHONLEGACYWINDOWSSTDIO: utf-8
-        run: python auto_login.py
+        run: python -X utf8 auto_login.py  # 强制 UTF-8 运行
