@@ -7,7 +7,7 @@ on:
   push:
     branches:
       - main
-      - jane
+      - Jane
 
 jobs:
   build:
